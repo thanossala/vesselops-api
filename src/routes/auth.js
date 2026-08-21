@@ -8,7 +8,12 @@ const router = Router();
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
-  const { email, password, role = 'officer' } = req.body;
+  const { email, password } = req.body;
+  // Role is intentionally NOT accepted from the request body. Letting a client
+  // self-assign role: 'admin' / 'captain' at signup would be a privilege
+  // escalation — every new account starts as 'officer' and elevated roles
+  // must be granted separately (e.g. by an admin), not chosen by the signer-upper.
+  const role = 'officer';
   if (!email || !password)
     return res.status(400).json({ error: 'Email and password required' });
   if (password.length < 8)

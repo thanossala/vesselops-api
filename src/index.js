@@ -61,8 +61,15 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-app.listen(PORT, () => {
-  console.log(`VesselOps API running on http://localhost:${PORT}`);
-});
+// Only start listening when this file is run directly (e.g. `node src/index.js`),
+// not when it's `require()`d — such as by the test suite, which imports the app
+// to drive it with supertest. Without this guard, importing the module for tests
+// opens a real network listener that never closes, forcing every test run to rely
+// on `jest --forceExit` as a workaround instead of exiting cleanly on its own.
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`VesselOps API running on http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;

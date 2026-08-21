@@ -89,6 +89,7 @@ cd vesselops-api
 npm install
 cp .env.example .env
 # Add your Supabase DATABASE_URL and JWT_SECRET to .env
+psql "$DATABASE_URL" -f src/db/schema.sql   # creates tables, indexes, and the certificate-status trigger
 npm run dev
 # API running at http://localhost:3000
 ```
